@@ -12,6 +12,7 @@
  */
 namespace Smile\StoreLocator\Helper;
 
+use IntlDateFormatter;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Locale\Resolver;
@@ -37,11 +38,6 @@ class Schedule extends AbstractHelper
     private $localeResolver;
 
     /**
-     * @var \Zend_Locale_Format
-     */
-    private $localeFormat;
-
-    /**
      * Schedule constructor.
      *
      * @param \Magento\Framework\App\Helper\Context $context        Application Context
@@ -50,13 +46,11 @@ class Schedule extends AbstractHelper
      */
     public function __construct(
         Context $context,
-        Resolver $localeResolver,
-        \Zend_Locale_Format $localeFormat
+        Resolver $localeResolver
     ) {
         parent::__construct($context);
 
         $this->localeResolver = $localeResolver;
-        $this->localeFormat   = $localeFormat;
     }
 
     /**
@@ -93,7 +87,8 @@ class Schedule extends AbstractHelper
      */
     private function getTimeFormat()
     {
-        return $this->localeFormat->getTimeFormat($this->localeResolver->getLocale());
+        $formatter = new IntlDateFormatter($this->localeResolver->getLocale(), IntlDateFormatter::SHORT, IntlDateFormatter::NONE);
+        return $formatter->getPattern();
     }
 
     /**
